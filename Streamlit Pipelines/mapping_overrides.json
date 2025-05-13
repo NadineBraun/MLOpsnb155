@@ -1,0 +1,41 @@
+{
+  "a941dd681aa3516c572404a38dae3e72": {
+    "pickup_col": "Trip_Pickup_DateTime",
+    "dropoff_col": "Trip_Dropoff_DateTime",
+    "distance_col": "Trip_Distance",
+    "fare_col": "Fare_Amt",
+    "total_col": "Total_Amt",
+    "passenger_col": "Passenger_Count",
+    "payment_type_col": "Payment_Type",
+    "pickup_long_col": "Start_Lon",
+    "pickup_lat_col": "Start_Lat",
+    "dropoff_long_col": "End_Lon",
+    "dropoff_lat_col": "End_Lat"
+  },
+  "5fdbdea3d1470bbc4f2ae2df190e31d6": {
+    "pickup_col": "pickup_datetime",
+    "dropoff_col": "dropoff_datetime",
+    "distance_col": "trip_distance",
+    "fare_col": "fare_amount",
+    "total_col": "total_amount",
+    "passenger_col": "passenger_count",
+    "payment_type_col": "payment_type",
+    "pickup_long_col": "pickup_longitude",
+    "pickup_lat_col": "pickup_latitude",
+    "dropoff_long_col": "dropoff_longitude",
+    "dropoff_lat_col": "dropoff_latitude"
+  },
+  "570dd3343dab2c4286116261a2254f31": {
+    "pickup_col": "tpep_pickup_datetime",
+    "dropoff_col": "tpep_dropoff_datetime",
+    "distance_col": "trip_distance",
+    "fare_col": "fare_amount",
+    "total_col": "total_amount",
+    "passenger_col": "passenger_count",
+    "payment_type_col": "payment_type",
+    "pickup_long_col": "PULocationID",
+    "pickup_lat_col": "PULocationID",
+    "dropoff_long_col": "DOLocationID",
+    "dropoff_lat_col": "DOLocationID"
+  }
+}

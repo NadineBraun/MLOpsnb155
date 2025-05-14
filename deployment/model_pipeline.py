@@ -40,11 +40,14 @@ def main():
 
     print("Starte Modelltraining ...")
     model = XGBRegressor(
-        n_estimators=20,
-        max_depth=4,
-        learning_rate=0.1,
-        subsample=0.8,
-        colsample_bytree=0.8,
+        n_estimators=167,
+        max_depth=13,
+        learning_rate=0.03478742290931512,
+        subsample=0.7348666779615057,
+        colsample_bytree=0.6070931662048404,
+        gamma=0.5496341248916392,
+        reg_alpha=0.003425043421816794,
+        reg_lambda=0.9373031835287268,
         random_state=42
     )
     model.fit(X_train, y_train)

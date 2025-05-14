@@ -44,12 +44,22 @@ with tabs[1]:
 
     if st.button("Starte Training"):
         with st.spinner("Trainiere Modell..."):
-            result = subprocess.run([sys.executable, str(train_script)], capture_output=True, text=True)
+            st.write("📦 Starte Training-Skript...")
+
+            result = subprocess.run(
+                [sys.executable, str(train_script)],
+                capture_output=True,
+                text=True
+            )
+
+            st.write("📤 Rückgabe des Trainingsskripts:")
             st.text(result.stdout)
+
             if result.returncode != 0:
-                st.error(result.stderr)
+                st.error("❌ Fehler beim Modelltraining:")
+                st.text(result.stderr)
             else:
-                st.success("Modelltraining erfolgreich abgeschlossen.")
+                st.success("✅ Modelltraining erfolgreich abgeschlossen.")
 
 # --- Tab 3: Tagesvorhersage (Platzhalter) ---
 with tabs[2]:

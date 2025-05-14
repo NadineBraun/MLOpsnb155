@@ -4,3 +4,4 @@ scikit-learn
 pandas
 pyarrow
 mlflow
+protobuf<4.24.0

@@ -15,7 +15,7 @@ def load_and_combine_data(years):
     dfs = []
     for year in years:
         for month in range(1, 13):
-            filename = f"features_{year}_{month:02}.parquet"
+            filename = f"features_yellow_tripdata_{year}-{month:02}.parquet"
             path = os.path.join(DATA_DIR, filename)
             if os.path.exists(path):
                 df = pd.read_parquet(path)

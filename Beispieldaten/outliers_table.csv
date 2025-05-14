@@ -1,0 +1,27 @@
+pickup_hour,total_distance,distance_outlier,total_fare,fare_outlier,total_amount,amount_outlier,total_passengers,passengers_outlier,total_duration,duration_outlier
+2009-11-01 01:00:00,147151.32,Yes,513238.79,Yes,,Yes,92477.0,Yes,621972.8,Yes
+2010-09-19 00:00:00,151152.32,Yes,566570.05,Yes,666454.17,Yes,94730.0,Yes,728718.8,Yes
+2010-09-19 01:00:00,143856.51,Yes,504178.79,Yes,,Yes,84173.0,Yes,,Yes
+2010-09-19 02:00:00,136916.44,Yes,,Yes,,Yes,,Yes,,Yes
+2010-09-19 03:00:00,122434.91,Yes,,Yes,,Yes,,Yes,,Yes
+2010-09-19 12:00:00,122506.01,Yes,,Yes,,Yes,,Yes,,Yes
+2010-09-19 13:00:00,130173.17,Yes,,Yes,,Yes,,Yes,,Yes
+2010-09-19 14:00:00,132231.61,Yes,,Yes,,Yes,,Yes,,Yes
+2010-09-19 15:00:00,130616.56,Yes,,Yes,,Yes,,Yes,,Yes
+2010-09-19 16:00:00,122171.55,Yes,,Yes,,Yes,,Yes,,Yes
+2010-09-19 17:00:00,132021.75,Yes,,Yes,,Yes,,Yes,,Yes
+2010-09-19 18:00:00,137702.76,Yes,,Yes,,Yes,,Yes,,Yes
+2010-09-19 19:00:00,128704.28,Yes,,Yes,,Yes,,Yes,,Yes
+2010-09-19 20:00:00,125546.1,Yes,,Yes,,Yes,,Yes,,Yes
+2010-09-19 21:00:00,122976.39,Yes,,Yes,,Yes,,Yes,,Yes
+2010-09-23 21:00:00,124432.03,Yes,,Yes,,Yes,,Yes,,Yes
+2010-09-23 22:00:00,128527.18,Yes,,Yes,,Yes,,Yes,,Yes
+2010-09-23 23:00:00,122793.87,Yes,,Yes,,Yes,,Yes,,Yes
+2010-09-24 22:00:00,129530.21,Yes,,Yes,,Yes,,Yes,,Yes
+2010-09-24 23:00:00,134489.4,Yes,,Yes,,Yes,79586.0,Yes,,Yes
+2010-09-25 00:00:00,129468.19,Yes,,Yes,,Yes,,Yes,,Yes
+2010-09-25 23:00:00,124461.54,Yes,,Yes,,Yes,79794.0,Yes,621271.1166666667,Yes
+2010-09-26 00:00:00,123006.71,Yes,,Yes,,Yes,,Yes,,Yes
+2010-11-07 01:00:00,132092.19,Yes,,Yes,,Yes,86255.0,Yes,,Yes
+2011-11-06 01:00:00,135374.01,Yes,,Yes,,Yes,85108.0,Yes,,Yes
+2013-11-03 01:00:00,150560.34,Yes,598281.68,Yes,722264.32,Yes,92118.0,Yes,,Yes

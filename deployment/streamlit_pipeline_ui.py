@@ -1,6 +1,6 @@
 import streamlit as st
 import subprocess
-import os
+import sys
 import json
 import pathlib
 import pandas as pd
@@ -10,13 +10,13 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 st.set_page_config(page_title="NYC Taxi MLOps UI", layout="wide")
 st.title("🚕 NYC Yellow Taxi – MLOps Dashboard")
 
-# Pfade korrekt definieren – funktioniert auch in der Cloud
+# Verzeichnis und Skriptpfade definieren
 deployment_dir = pathlib.Path(__file__).parent
 split_script = deployment_dir / "model_split_pipeline.py"
 train_script = deployment_dir / "model_pipeline.py"
 metrics_file = deployment_dir / "model_output" / "metrics.json"
 
-# Tabs 1 bis 5
+# Tabs
 tabs = st.tabs([
     "Daten-Split",
     "Modell-Training",
@@ -31,7 +31,7 @@ with tabs[0]:
 
     if st.button("Starte Daten-Split"):
         with st.spinner("Führe Split-Pipeline aus..."):
-            result = subprocess.run(["python", str(split_script)], capture_output=True, text=True)
+            result = subprocess.run([sys.executable, str(split_script)], capture_output=True, text=True)
             st.text(result.stdout)
             if result.returncode != 0:
                 st.error(result.stderr)
@@ -44,7 +44,7 @@ with tabs[1]:
 
     if st.button("Starte Training"):
         with st.spinner("Trainiere Modell..."):
-            result = subprocess.run(["python", str(train_script)], capture_output=True, text=True)
+            result = subprocess.run([sys.executable, str(train_script)], capture_output=True, text=True)
             st.text(result.stdout)
             if result.returncode != 0:
                 st.error(result.stderr)
@@ -56,7 +56,7 @@ with tabs[2]:
     st.header("Tagesvorhersage")
     st.info("Diese Funktion ist aktuell nicht implementiert.")
 
-# --- Tab 4: Monitoring ---
+# --- Tab 4: Monitoring (Metriken anzeigen) ---
 with tabs[3]:
     st.header("Monitoring – letzte Modellmetriken")
 

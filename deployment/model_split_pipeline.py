@@ -15,7 +15,7 @@ def load_and_combine_data(years):
         for month in range(1, 13):
             filename = f"features_yellow_tripdata_{year}-{month:02}.parquet"
             path = os.path.join(DATA_DIR, filename)
-            print(f"🔍 Lade Datei: {filename}")
+            print(f"Lade Datei: {filename}")
             if os.path.exists(path):
                 df = pd.read_parquet(path)
                 print(f"✅  → {len(df)} Zeilen")
@@ -31,12 +31,12 @@ def load_and_combine_data(years):
 def run_split_pipeline():
     mlflow.set_experiment("model_split_pipeline")
     with mlflow.start_run():
-        print("🚧 Starte Daten-Split ...")
+        print("Starte Daten-Split ...")
         train_df = load_and_combine_data(TRAIN_YEARS)
         test_df = load_and_combine_data(TEST_YEARS)
 
-        print(f"📊 Train-Dataset: {train_df.shape}")
-        print(f"📊 Test-Dataset:  {test_df.shape}")
+        print(f"Train-Dataset: {train_df.shape}")
+        print(f"Test-Dataset:  {test_df.shape}")
 
         mlflow.log_param("train_rows", len(train_df))
         mlflow.log_param("test_rows", len(test_df))

@@ -44,7 +44,7 @@ with tabs[1]:
 
     if st.button("Starte Training"):
         with st.spinner("Trainiere Modell..."):
-            st.write("📦 Starte Training-Skript...")
+            st.write("Starte Training-Skript...")
 
             result = subprocess.run(
                 [sys.executable, str(train_script)],
@@ -52,7 +52,7 @@ with tabs[1]:
                 text=True
             )
 
-            st.write("📤 Rückgabe des Trainingsskripts:")
+            st.write("Rückgabe des Trainingsskripts:")
             st.text(result.stdout)
 
             if result.returncode != 0:

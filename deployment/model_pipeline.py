@@ -21,9 +21,9 @@ def main():
     df_train = pd.read_parquet(train_path)
     df_test = pd.read_parquet(test_path)
 
-    X_train = df_train[feature_cols]
+    X_train = df_train[feature_cols].astype("int")
     y_train = df_train[target_col]
-    X_test = df_test[feature_cols]
+    X_test = df_test[feature_cols].astype("int")
     y_test = df_test[target_col]
 
     model = XGBRegressor(

@@ -18,7 +18,7 @@ def main():
     train_path = data_path / "dataset_train.parquet"
     test_path = data_path / "dataset_test.parquet"
 
-    print("📂 Lade Trainings- und Testdaten ...")
+    print("Lade Trainings- und Testdaten ...")
     df_train = pd.read_parquet(train_path)
     df_test = pd.read_parquet(test_path)
 
@@ -30,31 +30,26 @@ def main():
     X_test = df_test[feature_cols].astype("int")
     y_test = df_test[target_col]
 
-    print("📊 Typen im Trainings-Set:")
+    print("Datentypen:")
     print(X_train.dtypes)
 
     if len(X_train) == 0 or len(y_train) == 0:
-        raise ValueError("❌ Trainingsdaten leer – überprüfe Split.")
-
+        raise ValueError("❌ Trainingsdaten sind leer.")
     if len(X_test) == 0 or len(y_test) == 0:
-        raise ValueError("❌ Testdaten leer – überprüfe Split.")
+        raise ValueError("❌ Testdaten sind leer.")
 
     print("Starte Modelltraining ...")
     model = XGBRegressor(
-        n_estimators=167,
-        max_depth=13,
-        learning_rate=0.03478742290931512,
-        subsample=0.7348666779615057,
-        colsample_bytree=0.6070931662048404,
-        gamma=0.5496341248916392,
-        reg_alpha=0.003425043421816794,
-        reg_lambda=0.9373031835287268,
+        n_estimators=20,
+        max_depth=4,
+        learning_rate=0.1,
+        subsample=0.8,
+        colsample_bytree=0.8,
         random_state=42
     )
     model.fit(X_train, y_train)
+    print("✅ Training abgeschlossen.")
 
-    print("✅ Training abgeschlossen")
-    print("📈 Berechne Metriken ...")
     y_pred = model.predict(X_test)
     mae = mean_absolute_error(y_test, y_pred)
     rmse = np.sqrt(mean_squared_error(y_test, y_pred))
@@ -62,7 +57,7 @@ def main():
 
     mlflow.set_experiment("model_pipeline")
     with mlflow.start_run():
-        mlflow.log_param("model_type", "XGBoost")
+        mlflow.log_param("model_type", "XGBoost-small")
         mlflow.log_param("features", ",".join(feature_cols))
         mlflow.log_param("target", target_col)
 
@@ -84,7 +79,8 @@ def main():
             json.dump(metrics, f, indent=2)
         mlflow.log_artifact(str(metrics_path))
 
-        print("✅ Modell gespeichert und Metriken geloggt.")
+        print("Metriken geloggt")
+        print("✅ Modell gespeichert und abgeschlossen.")
 
 if __name__ == "__main__":
     main()

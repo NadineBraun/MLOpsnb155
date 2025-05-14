@@ -2,6 +2,7 @@ import streamlit as st
 import subprocess
 import os
 import json
+import pathlib
 import pandas as pd
 import xgboost as xgb
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
@@ -9,7 +10,13 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 st.set_page_config(page_title="NYC Taxi MLOps UI", layout="wide")
 st.title("🚕 NYC Yellow Taxi – MLOps Dashboard")
 
-# Tabs 1 bis 5 (Index 0 bis 4)
+# Pfade korrekt definieren – funktioniert auch in der Cloud
+deployment_dir = pathlib.Path(__file__).parent
+split_script = deployment_dir / "model_split_pipeline.py"
+train_script = deployment_dir / "model_pipeline.py"
+metrics_file = deployment_dir / "model_output" / "metrics.json"
+
+# Tabs 1 bis 5
 tabs = st.tabs([
     "Daten-Split",
     "Modell-Training",
@@ -24,10 +31,7 @@ with tabs[0]:
 
     if st.button("Starte Daten-Split"):
         with st.spinner("Führe Split-Pipeline aus..."):
-            result = subprocess.run(
-                ["python", "model_split_pipeline.py"],
-                capture_output=True, text=True
-            )
+            result = subprocess.run(["python", str(split_script)], capture_output=True, text=True)
             st.text(result.stdout)
             if result.returncode != 0:
                 st.error(result.stderr)
@@ -40,10 +44,7 @@ with tabs[1]:
 
     if st.button("Starte Training"):
         with st.spinner("Trainiere Modell..."):
-            result = subprocess.run(
-                ["python", "model_pipeline.py"],
-                capture_output=True, text=True
-            )
+            result = subprocess.run(["python", str(train_script)], capture_output=True, text=True)
             st.text(result.stdout)
             if result.returncode != 0:
                 st.error(result.stderr)
@@ -55,12 +56,12 @@ with tabs[2]:
     st.header("Tagesvorhersage")
     st.info("Diese Funktion ist aktuell nicht implementiert.")
 
-# --- Tab 4: Monitoring (Metriken anzeigen) ---
+# --- Tab 4: Monitoring ---
 with tabs[3]:
     st.header("Monitoring – letzte Modellmetriken")
 
     try:
-        with open("model_output/metrics.json", "r") as f:
+        with open(metrics_file, "r") as f:
             metrics = json.load(f)
 
         col1, col2, col3 = st.columns(3)
@@ -78,4 +79,3 @@ with tabs[3]:
 with tabs[4]:
     st.header("Drift-Analyse")
     st.info("Diese Funktion ist aktuell nicht implementiert.")
-

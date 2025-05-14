@@ -18,14 +18,28 @@ def main():
     train_path = data_path / "dataset_train.parquet"
     test_path = data_path / "dataset_test.parquet"
 
+    print("📂 Lade Trainings- und Testdaten ...")
     df_train = pd.read_parquet(train_path)
     df_test = pd.read_parquet(test_path)
+
+    print(f"Train-Dataset: {df_train.shape}")
+    print(f"Test-Dataset:  {df_test.shape}")
 
     X_train = df_train[feature_cols].astype("int")
     y_train = df_train[target_col]
     X_test = df_test[feature_cols].astype("int")
     y_test = df_test[target_col]
 
+    print("📊 Typen im Trainings-Set:")
+    print(X_train.dtypes)
+
+    if len(X_train) == 0 or len(y_train) == 0:
+        raise ValueError("❌ Trainingsdaten leer – überprüfe Split.")
+
+    if len(X_test) == 0 or len(y_test) == 0:
+        raise ValueError("❌ Testdaten leer – überprüfe Split.")
+
+    print("Starte Modelltraining ...")
     model = XGBRegressor(
         n_estimators=167,
         max_depth=13,
@@ -39,6 +53,8 @@ def main():
     )
     model.fit(X_train, y_train)
 
+    print("✅ Training abgeschlossen")
+    print("📈 Berechne Metriken ...")
     y_pred = model.predict(X_test)
     mae = mean_absolute_error(y_test, y_pred)
     rmse = np.sqrt(mean_squared_error(y_test, y_pred))
@@ -68,7 +84,7 @@ def main():
             json.dump(metrics, f, indent=2)
         mlflow.log_artifact(str(metrics_path))
 
-        print("✅ Modelltraining abgeschlossen und gespeichert.")
+        print("✅ Modell gespeichert und Metriken geloggt.")
 
 if __name__ == "__main__":
     main()

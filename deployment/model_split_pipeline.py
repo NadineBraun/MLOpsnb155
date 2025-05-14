@@ -1,57 +1,56 @@
-import argparse
-import mlflow
-from pathlib import Path
-import pandas as pd
 import os
-import hashlib
+import pandas as pd
+import pyarrow.parquet as pq
+import mlflow
 
-def load_feature_files(years, features_path="features"):
+# Pfad zur Datenablage
+DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
+
+# Trainings- und Testjahre
+TRAIN_YEARS = [2013, 2014]
+TEST_YEARS = [2015, 2016]
+
+# Features und Zielvariable
+FEATURES = ["hour", "weekday", "month", "year"]
+TARGET = "trip_count"
+
+def load_and_combine_data(years):
     dfs = []
     for year in years:
         for month in range(1, 13):
-            file = Path(features_path) / f"features_yellow_tripdata_{year}-{month:02d}.parquet"
-            if file.exists():
-                dfs.append(pd.read_parquet(file))
-            else:
-                print(f"Datei nicht gefunden: {file}")
-    return pd.concat(dfs, ignore_index=True) if dfs else pd.DataFrame()
+            filename = f"features_{year}_{month:02}.parquet"
+            path = os.path.join(DATA_DIR, filename)
+            if os.path.exists(path):
+                df = pd.read_parquet(path)
+                dfs.append(df)
+    if dfs:
+        return pd.concat(dfs, ignore_index=True)
+    else:
+        return pd.DataFrame(columns=FEATURES + [TARGET])
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--train_years", type=str, required=True)
-    parser.add_argument("--test_years", type=str, required=True)
-    parser.add_argument("--features_path", type=str, default="features")
-    parser.add_argument("--output_path", type=str, default=".")
-    args = parser.parse_args()
+def run_split_pipeline():
+    mlflow.set_experiment("model_split_pipeline")
+    with mlflow.start_run():
+        # Daten laden
+        train_df = load_and_combine_data(TRAIN_YEARS)
+        test_df = load_and_combine_data(TEST_YEARS)
 
-    train_years = [int(y) for y in args.train_years.split(",")]
-    test_years = [int(y) for y in args.test_years.split(",")]
+        # Logge Größe
+        mlflow.log_param("train_rows", len(train_df))
+        mlflow.log_param("test_rows", len(test_df))
 
-    with mlflow.start_run(run_name="split_train_test", nested=True):
-        print("Starte Aufteilung in Trainings- und Testdaten ...")
-        mlflow.log_param("train_years", args.train_years)
-        mlflow.log_param("test_years", args.test_years)
+        # Speichern
+        train_path = os.path.join(DATA_DIR, "dataset_train.parquet")
+        test_path = os.path.join(DATA_DIR, "dataset_test.parquet")
 
-        print("Lade Trainingsdaten ...")
-        df_train = load_feature_files(train_years, args.features_path)
-        print(f"Trainingsdaten geladen: {df_train.shape}")
+        train_df.to_parquet(train_path, index=False)
+        test_df.to_parquet(test_path, index=False)
 
-        print("Lade Testdaten ...")
-        df_test = load_feature_files(test_years, args.features_path)
-        print(f"Testdaten geladen: {df_test.shape}")
-
-        if df_train.empty or df_test.empty:
-            raise ValueError("❌ Trainings- oder Testdaten fehlen. Aufteilung abgebrochen.")
-
-        train_path = Path(args.output_path) / "df_train.parquet"
-        test_path = Path(args.output_path) / "df_test.parquet"
-        df_train.to_parquet(train_path, index=False)
-        df_test.to_parquet(test_path, index=False)
-
-        if mlflow.active_run():
-            mlflow.log_artifact(str(train_path))
-            mlflow.log_artifact(str(test_path))
-            print("✅ Feature-Splits gespeichert und geloggt.")
+        # MLflow Logging
+        mlflow.log_artifact(train_path)
+        mlflow.log_artifact(test_path)
+        mlflow.log_param("features", FEATURES)
+        mlflow.log_param("target", TARGET)
 
 if __name__ == "__main__":
-    main()
+    run_split_pipeline()

@@ -19,7 +19,7 @@ BASE_DIR = "/Users/nadinebraun/Documents/Master/Semester 4/PM1 ML Ops/ML-Ops-nb1
 # --- TAB 2: Datenpipeline ---
 with tabs[1]:
     st.header("Preprocessing und Feature Engineering starten")
-    years = st.multiselect("Wähle Jahre für die Daten-Pipeline für das Preprocessing und Feature Engineering:", options=list(range(2009, 2025)), default=[2009, 2010, 2011, 20120, 2013, 2014, 2015, 2016, 2017])
+    years = st.multiselect("Wähle Jahre für die Daten-Pipeline für das Preprocessing und Feature Engineering:", options=list(range(2009, 2025)), default=[2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017])
     if st.button("Starte Datenpipeline"):
         years_str = ",".join(map(str, years))
         cmd = [

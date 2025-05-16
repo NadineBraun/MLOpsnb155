@@ -28,10 +28,14 @@ Ziel war es, zentrale Bausteine eines MLOps-Prozesses – von der Datenvorverarb
 
 ---
 
-###  Cloud-Deployment
+###  Deployment mit Streamlit Cloud
 
 - `deployment/`  
   Enthält die Dateien für die cloudbasierte Variante der Anwendung, wie sie auf **Streamlit Cloud** veröffentlicht wurde. Diese Version bildet exemplarisch Modelltraining, Metriklogging und Monitoring ab und kann direkt im Browser genutzt werden – ohne lokale Installation.
+  
+### Deployment mit Hetzner Cloud Server und Docker
+-  `clouddeployment/`
+  Enthält die Dateien für die erweiterte cloudbasierte Variante der Anwendung, wie sie mit einem kostenpflichten Hetzner Cloud Server und Docker veröffentlicht wurde. Diese Version bildet bis auf das Monitoring die Funktionen der lokalen Version vollstänidg ab. Lediglich der Zeitraum (2013-2016) musste aufgrudn der großen Datenmenge deutlich reudziert werden.
 
 ---
 
@@ -54,5 +58,6 @@ Ziel war es, zentrale Bausteine eines MLOps-Prozesses – von der Datenvorverarb
 
 - Bei Bedarf können sämtliche Originaldaten sowie weitere Zwischenergebnisse zur Verfügung gestellt werden. Aufgrund ihrer Größe konnten sie jedoch nicht im Repository abgelegt werden.
 - Die Anwendung nutzt ausschließlich Open Data der Stadt New York. Die Daten wurden vorab aggregiert und auf Stundenebene zusammengeführt.
+- Das ML Canvas findet sich in schriftlicher Form inklusive aller Abschnitte im erstellten Notebook 2. Business Requirements (ML Canvas) wieder.
 
 ---

@@ -12,7 +12,7 @@ from pathlib import Path
 st.title("🚕 NYC Yellow Taxi – MLOps Dashboard")
 
 # --- TAB SETUP ---
-tabs = st.tabs(["Manuelles Mapping", "Daten-Pipeline", "Daten-Split", "Modell-Training", "Tagesvorhersage", "Drift-Analyse"])
+tabs = st.tabs(["Manuelles Mapping", "Daten-Pipeline", "Daten-Split", "Modell-Training", "MLflow Explorer", "Tagesvorhersage", "Monitoring", "Drift-Analyse"])
 
 # BASEDIR (anpassen, wenn nötig)
 BASE_DIR = os.getcwd()
@@ -94,6 +94,33 @@ with tabs[3]:
             else:
                 st.success("Modell erfolgreich trainiert!")
 
+# --- TAB 5: MLflow Explorer ---
+with tabs[4]:
+    st.header("MLflow Explorer")
+    tracking_uri = mlflow.get_tracking_uri()
+    st.caption(f"Tracking URI: {tracking_uri}")
+
+    experiments = mlflow.search_experiments()
+    exp_names = [e.name for e in experiments]
+    selected_exp = st.selectbox("Experiment auswählen", exp_names)
+
+    runs_df = mlflow.search_runs(experiment_names=[selected_exp])
+    if not runs_df.empty:
+        selected_run_id = st.selectbox("Run auswählen", runs_df["run_id"])
+        run = mlflow.get_run(selected_run_id)
+
+        st.subheader("📊 Metriken")
+        st.json(run.data.metrics)
+
+        st.subheader("⚙️ Parameter")
+        st.json(run.data.params)
+
+        st.subheader("📁 Artefakte")
+        art_paths = mlflow.artifacts.download_artifacts(run_id=selected_run_id)
+        st.text(f"Artefaktpfad: {art_paths}")
+    else:
+        st.info("Keine Runs im ausgewählten Experiment gefunden.")
+
 # --- TAB 1: Manuelles Mapping ---
 with tabs[0]:
     st.header("Manuelles Spalten-Mapping")
@@ -118,7 +145,7 @@ with tabs[0]:
 
         st.write("Verfügbare Spalten mit Beispielwerten aus:", sample_file)
         for col in columns:
-            st.markdown(f"- **{col}** → Beispielwert: `{df[col].iloc[0]}`")
+            st.markdown(f"- **{col}** → Beispielwert: {df[col].iloc[0]}")
 
         pickup_long = st.selectbox("Spalte für pickup_long_col", columns)
         pickup_lat = st.selectbox("Spalte für pickup_lat_col", columns)
@@ -164,8 +191,8 @@ with tabs[0]:
         st.warning("Keine Beispieldatei im gewählten Zeitraum gefunden.")
 
         
-# --- TAB 5: Tagesvorhersage ---
-with tabs[4]:
+# --- TAB 6: Tagesvorhersage ---
+with tabs[5]:
     st.header("Tagesvorhersage")
     input_date = st.date_input("Wähle ein Datum zur Vorhersage")
 
@@ -193,8 +220,35 @@ with tabs[4]:
             st.line_chart(df_pred.set_index("hour")["prediction"])
             st.success("Vorhersage abgeschlossen.")
             
-# --- TAB 6: Drift-Analyse ---
-with tabs[5]:
+# --- TAB 7: Monitoring ---
+with tabs[6]:
+    st.header("Monitoring / Referenzvergleich")
+    reference_path = os.path.join(BASE_DIR, "reference_metrics.json")
+    latest_run = mlflow.search_runs(order_by=["start_time DESC"], max_results=1)
+
+    if latest_run.empty:
+        st.info("Kein MLflow-Run gefunden.")
+    else:
+        run_id = latest_run.iloc[0]["run_id"]
+        run = mlflow.get_run(run_id)
+
+        st.subheader("📁 Aktuelle Metriken")
+        st.json(run.data.metrics)
+
+        if os.path.exists(reference_path):
+            st.subheader("📁 Referenzmetriken")
+            with open(reference_path) as f:
+                ref = json.load(f)
+            st.json(ref)
+
+            if "R2" in run.data.metrics and "R2" in ref:
+                delta = run.data.metrics["R2"] - ref["R2"]
+                st.metric("R² Delta", f"{delta:.3f}", delta_color="inverse")
+        else:
+            st.info("Keine Referenzdatei gefunden. Erstelle eine unter 'reference_metrics.json'")
+            
+# --- TAB 8: Drift-Analyse ---
+with tabs[7]:
     st.header("Monitoring: Data & Concept Drift")
 
     import os

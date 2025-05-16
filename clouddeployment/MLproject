@@ -1,0 +1,32 @@
+name: nyc-taxi-pipeline
+
+entry_points:
+  main:
+    parameters:
+      years: {type: string, default: "2015,2016,2017"}
+    command: >
+      python run_pipeline.py --years {years}
+      
+  model_split:
+    parameters:
+      train_years: {type: str}
+      test_years: {type: str}
+      features_path: {type: str, default: "features"}
+      output_path: {type: str, default: "."}
+    command: >
+      python model_split_pipeline.py
+      --train_years {train_years}
+      --test_years {test_years}
+      --features_path {features_path}
+      --output_path {output_path}
+
+  model_training:
+    parameters:
+      train_path: {type: str, default: "df_train.parquet"}
+      test_path: {type: str, default: "df_test.parquet"}
+      target_col: {type: str, default: "trip_count"}
+    command: >
+      python model_pipeline.py
+      --train_path {train_path}
+      --test_path {test_path}
+      --target_col {target_col}

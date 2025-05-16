@@ -19,12 +19,12 @@ BASE_DIR = "/Users/nadinebraun/Documents/Master/Semester 4/PM1 ML Ops/ML-Ops-nb1
 # --- TAB 2: Datenpipeline ---
 with tabs[1]:
     st.header("Preprocessing und Feature Engineering starten")
-    years = st.multiselect("Wähle Jahre für die Daten-Pipeline für das Preprocessing und Feature Engineering:", options=list(range(2009, 2025)), default=[2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017])
+    years = st.multiselect("Wähle Jahre für die Daten-Pipeline für das Preprocessing und Feature Engineering:", options=list(range(2009, 2025)), default=[2009, 2010, 2011, 20120, 2013, 2014, 2015, 2016, 2017])
     if st.button("Starte Datenpipeline"):
         years_str = ",".join(map(str, years))
         cmd = [
             "mlflow", "run", BASE_DIR,
-            "--entry-point", "data_pipeline",
+            "--entry-point", "main",
             "--experiment-name", "default",
             "--storage-dir", os.path.join(BASE_DIR, "mlruns"),
             "--env-manager=local",
@@ -41,8 +41,8 @@ with tabs[1]:
 # --- TAB 3: Daten-Split ---
 with tabs[2]:
     st.header("Daten-Split starten")
-    train_years = st.multiselect("Trainingsjahre", options=list(range(2009, 2025)), default=[2010,2011,2012,2013,2014], key="train_split")
-    test_years = st.multiselect("Testjahre", options=list(range(2009, 2025)), default=[2015,2016,2017], key="test_split")
+    train_years = st.multiselect("Trainingsjahre", options=list(range(2009, 2025)), default=[2009, 2010, 2011, 2012, 2013, 2014], key="train_split")
+    test_years = st.multiselect("Testjahre", options=list(range(2009, 2025)), default=[2015, 2016, 2017], key="test_split")
 
     if st.button("Starte Daten-Split"):
         train_str = ",".join(map(str, train_years))
@@ -239,7 +239,6 @@ with tabs[6]:
             st.info("Keine Referenzdatei gefunden. Erstelle eine unter 'reference_metrics.json'")
             
 # --- TAB 8: Drift-Analyse ---
-# --- TAB: Monitoring ---
 with tabs[7]:
     st.header("Monitoring: Data & Concept Drift")
 

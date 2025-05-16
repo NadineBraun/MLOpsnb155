@@ -1,0 +1,4 @@
+__pycache__/
+mlruns/
+*.ipynb
+.DS_Store

@@ -12,7 +12,7 @@ from pathlib import Path
 st.title("🚕 NYC Yellow Taxi – MLOps Dashboard")
 
 # --- TAB SETUP ---
-tabs = st.tabs(["Manuelles Mapping", "Daten-Pipeline", "Daten-Split", "Modell-Training", "MLflow Explorer", "Tagesvorhersage", "Drift-Analyse"])
+tabs = st.tabs(["Manuelles Mapping", "Daten-Pipeline", "Daten-Split", "Modell-Training", "Tagesvorhersage", "Drift-Analyse"])
 
 # BASEDIR (anpassen, wenn nötig)
 BASE_DIR = os.getcwd()
@@ -94,40 +94,13 @@ with tabs[3]:
             else:
                 st.success("Modell erfolgreich trainiert!")
 
-# --- TAB 5: MLflow Explorer ---
-with tabs[4]:
-    st.header("MLflow Explorer")
-    tracking_uri = mlflow.get_tracking_uri()
-    st.caption(f"Tracking URI: {tracking_uri}")
-
-    experiments = mlflow.search_experiments()
-    exp_names = [e.name for e in experiments]
-    selected_exp = st.selectbox("Experiment auswählen", exp_names)
-
-    runs_df = mlflow.search_runs(experiment_names=[selected_exp])
-    if not runs_df.empty:
-        selected_run_id = st.selectbox("Run auswählen", runs_df["run_id"])
-        run = mlflow.get_run(selected_run_id)
-
-        st.subheader("📊 Metriken")
-        st.json(run.data.metrics)
-
-        st.subheader("⚙️ Parameter")
-        st.json(run.data.params)
-
-        st.subheader("📁 Artefakte")
-        art_paths = mlflow.artifacts.download_artifacts(run_id=selected_run_id)
-        st.text(f"Artefaktpfad: {art_paths}")
-    else:
-        st.info("Keine Runs im ausgewählten Experiment gefunden.")
-
 # --- TAB 1: Manuelles Mapping ---
 with tabs[0]:
     st.header("Manuelles Spalten-Mapping")
 
     years = st.multiselect(
         "Wähle Jahre für das Beispiel-Mapping:",
-        options=list(range(2009, 2025)),
+        options=list(range(2013, 2016)),
         default=[2013]
     )
 
@@ -191,8 +164,8 @@ with tabs[0]:
         st.warning("Keine Beispieldatei im gewählten Zeitraum gefunden.")
 
         
-# --- TAB 6: Tagesvorhersage ---
-with tabs[5]:
+# --- TAB 5: Tagesvorhersage ---
+with tabs[4]:
     st.header("Tagesvorhersage")
     input_date = st.date_input("Wähle ein Datum zur Vorhersage")
 
@@ -220,8 +193,8 @@ with tabs[5]:
             st.line_chart(df_pred.set_index("hour")["prediction"])
             st.success("Vorhersage abgeschlossen.")
             
-# --- TAB 8: Drift-Analyse ---
-with tabs[7]:
+# --- TAB 6: Drift-Analyse ---
+with tabs[5]:
     st.header("Monitoring: Data & Concept Drift")
 
     import os
